@@ -2,7 +2,7 @@ import './Ball.css';
 import { ball } from 'Constants';
 
 export const Ball = (props) => {
-    const { left, color } = props;
+    const { left, color, top } = props;
     return (
         <span
             className="ball"
@@ -10,6 +10,7 @@ export const Ball = (props) => {
                 width: ball.width,
                 height: ball.height,
                 left: left,
+                top: top,
                 backgroundColor: color,
             }}
         ></span>
