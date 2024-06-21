@@ -1,8 +1,7 @@
-import { card } from "../../Constants";
-import "./Card.css";
+import { card } from '../../Constants';
+import './Card.css';
 
 export const Card = () => {
-    
     return (
         <div
             className="card"
