@@ -1,22 +1,27 @@
-class Timer {
+export class Timer {
     run(miliSecond) {
         this.miliSecond = miliSecond;
     }
-    stop(miliSecond) {
-        if (this.timerId) {
+
+    stop(stopTime) {
+        if (this.timerId !== undefined) {
             setTimeout(() => {
                 clearInterval(this.timerId);
-            }, miliSecond);
+            }, stopTime);
         }
     }
+
     on(cb) {
+        this.unSubscribe();
+        this.subscribe(cb);
+    }
+
+    unSubscribe() {
+        if (this.timerId !== undefined) {
+            clearInterval(this.timerId);
+        }
+    }
+    subscribe(cb) {
         this.timerId = setInterval(cb, this.miliSecond);
     }
 }
-
-const timer = new Timer();
-timer.run(1000);
-timer.on(() => {
-    console.log(2);
-});
-timer.stop(5000);
