@@ -6,6 +6,7 @@ import { Timer } from 'helper/Timer';
 import { getRandomNum } from 'helper/getRandomNum';
 import { getRandomColor } from 'helper/getRandomColor';
 import { Ball } from 'components/ball/Ball';
+import { Board } from 'components/board/Board';
 
 export const Card = () => {
     const { balls, setBalls } = useContext(GameContext);
@@ -71,6 +72,7 @@ export const Card = () => {
                     top={ball.top}
                 />
             ))}
+            <Board />
         </div>
     );
 };
