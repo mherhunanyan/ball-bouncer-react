@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { ball, card, colors } from '../../Constants';
+import { ball, card, colors, finalTime } from 'Constants';
 import './Card.css';
 import { GameContext } from 'context/GameContext';
 import { Timer } from 'helper/Timer';
@@ -9,6 +9,7 @@ import { Ball } from 'components/ball/Ball';
 
 export const Card = () => {
     const { balls, setBalls } = useContext(GameContext);
+    const maxTop = card.height + card.marginTop - ball.height;
 
     const getRandomBallPlace = () => {
         return getRandomNum(
@@ -36,9 +37,26 @@ export const Card = () => {
             });
             nestedTimer.stop(3000);
         });
+        timer.stop(finalTime);
 
         return () => timer.unSubscribe();
     }, [setBalls]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setBalls((prevBalls) => {
+                return prevBalls.map((ball) => {
+                    const newTop = ball.top + 10;
+                    return {
+                        ...ball,
+                        top: newTop > maxTop ? maxTop : newTop,
+                    };
+                });
+            });
+        }, ball.speed.bottom);
+
+        return () => clearInterval(interval);
+    }, [setBalls, maxTop]);
 
     return (
         <div
