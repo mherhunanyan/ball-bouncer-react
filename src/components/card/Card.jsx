@@ -1,5 +1,5 @@
-import { useContext, useEffect } from 'react';
-import { ball, card, colors, finalTime } from 'Constants';
+import { useContext, useEffect, useState } from 'react';
+import { ball, board, card, colors, finalTime } from 'Constants';
 import './Card.css';
 import { GameContext } from 'context/GameContext';
 import { Timer } from 'helper/Timer';
@@ -11,6 +11,7 @@ import { Board } from 'components/board/Board';
 export const Card = () => {
     const { balls, setBalls } = useContext(GameContext);
     const maxTop = card.height + card.marginTop - ball.height;
+    const [boardLeft, setBoardLeft] = useState(20);
 
     const getRandomBallPlace = () => {
         return getRandomNum(
@@ -18,6 +19,29 @@ export const Card = () => {
             card.marginLeft + card.width - ball.width,
         );
     };
+
+    useEffect(() => {
+        const keyDownHandler = (event) => {
+            console.log(event.code);
+            if (event.code === 'ArrowLeft') {
+                console.log(boardLeft, card.marginLeft, 1);
+                if (boardLeft > card.marginLeft) {
+                    setBoardLeft((prev) => (prev -= 20));
+                }
+            } else if (event.code === 'ArrowRight') {
+                console.log(
+                    boardLeft,
+                    card.marginLeft + card.width - board.width,
+                    2,
+                );
+                if (boardLeft < card.marginLeft + card.width - board.width) {
+                    setBoardLeft((prev) => (prev += 20));
+                }
+            }
+        };
+        window.addEventListener('keydown', keyDownHandler);
+        return () => window.removeEventListener('keydown', keyDownHandler);
+    }, [boardLeft]);
 
     useEffect(() => {
         const timer = new Timer();
@@ -72,7 +96,7 @@ export const Card = () => {
                     top={ball.top}
                 />
             ))}
-            <Board />
+            <Board boardLeft={boardLeft} />
         </div>
     );
 };

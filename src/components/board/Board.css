@@ -1,6 +1,6 @@
 .board {
     background-color: burlywood;
-    margin-bottom: 8;
+    margin-bottom: 8px;
     position: absolute;
     border-radius: 10px;
     align-self: flex-end;
