@@ -61,7 +61,9 @@ export const Card = () => {
     }, [setBalls]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const timer = new Timer();
+        timer.run(ball.speed.bottom);
+        timer.on(() => {
             setBalls((prevBalls) => {
                 return prevBalls.map((ball) => {
                     const newTop = ball.top + 10;
@@ -71,9 +73,9 @@ export const Card = () => {
                     };
                 });
             });
-        }, ball.speed.bottom);
-
-        return () => clearInterval(interval);
+        });
+        timer.stop(finalTime);
+        return () => timer.unSubscribe();
     }, [setBalls, maxTop]);
 
     return (
