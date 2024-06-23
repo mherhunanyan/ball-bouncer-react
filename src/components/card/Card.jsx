@@ -22,7 +22,6 @@ export const Card = () => {
 
     useEffect(() => {
         const keyDownHandler = (event) => {
-            console.log(event.code);
             if (event.code === 'ArrowLeft') {
                 if (boardLeft > card.marginLeft) {
                     setBoardLeft((prev) => (prev -= 20));
