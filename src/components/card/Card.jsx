@@ -24,16 +24,10 @@ export const Card = () => {
         const keyDownHandler = (event) => {
             console.log(event.code);
             if (event.code === 'ArrowLeft') {
-                console.log(boardLeft, card.marginLeft, 1);
                 if (boardLeft > card.marginLeft) {
                     setBoardLeft((prev) => (prev -= 20));
                 }
             } else if (event.code === 'ArrowRight') {
-                console.log(
-                    boardLeft,
-                    card.marginLeft + card.width - board.width,
-                    2,
-                );
                 if (boardLeft < card.marginLeft + card.width - board.width) {
                     setBoardLeft((prev) => (prev += 20));
                 }
