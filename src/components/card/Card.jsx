@@ -14,7 +14,7 @@ import { Board } from 'components/board/Board';
 export const Card = (props) => {
     const { balls, setBalls } = useContext(GameContext);
     const maxTop = card.height + card.marginTop - ball.height;
-    const [boardLeft, setBoardLeft] = useState(card.marginLeft);
+    const [boardLeft, setBoardLeft] = useState(0);
     const cb1 = useRef(() => {});
     const cb2 = useRef(() => {});
 
@@ -42,11 +42,11 @@ export const Card = (props) => {
     useEffect(() => {
         const keyDownHandler = (event) => {
             if (event.code === 'ArrowLeft') {
-                if (boardLeft > card.marginLeft) {
+                if (boardLeft > 0) {
                     setBoardLeft((prev) => (prev -= 20));
                 }
             } else if (event.code === 'ArrowRight') {
-                if (boardLeft < card.marginLeft + card.width - board.width) {
+                if (boardLeft < card.width - board.width) {
                     setBoardLeft((prev) => (prev += 20));
                 }
             }
