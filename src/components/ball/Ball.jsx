@@ -1,14 +1,15 @@
 import './Ball.css';
-import { ball } from 'Constants';
+import { ball as sizeBall } from 'Constants';
 
 export const Ball = (props) => {
-    const { left, color, top } = props;
+    const { ball } = props;
+    const {left, top, color} = ball;
     return (
         <span
             className="ball"
             style={{
-                width: ball.width,
-                height: ball.height,
+                width: sizeBall.width,
+                height: sizeBall.height,
                 left: left,
                 top: top,
                 backgroundColor: color,
