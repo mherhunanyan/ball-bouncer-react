@@ -1,7 +1,7 @@
 import { CARDSIZE } from 'Constants';
 import './Card.css';
 import { useEffect, useRef, useState } from 'react';
-import { getNumber } from 'helper/getRandomNumber';
+import { getRandomNumber } from 'helper/GetRandomNumber';
 
 export const Card = () => {
     const [balls, setBalls] = useState([]);
@@ -9,20 +9,23 @@ export const Card = () => {
 
     useEffect(() => {
         const id = setInterval(cb.current, 1000);
-
         return () => clearInterval(id);
-    }, [])
+    }, []);
 
-    useEffect(() => {
-        cb.current = () => {
-            setBalls([...balls, {left: getNumber}])   
-        }
-    })
+    // useEffect(() => {
+    //     cb.current = () => {
+    //         setBalls([...balls, {left: getRandomNumber, color: }])
+    //     }
+    // })
 
     return (
         <div
             className="card"
-            style={{ width: CARDSIZE.width, height: CARDSIZE.heigth }}
-        ></div>
+            style={{ width: CARDSIZE.width, height: CARDSIZE.height }}
+        >
+            {balls.map((ball) => (
+                <span left={ball.left} color={ball.color}></span>
+            ))}
+        </div>
     );
 };
