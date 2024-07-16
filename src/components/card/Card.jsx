@@ -1,7 +1,8 @@
-import { BALLSIZE, BALL_COLOR, CARDSIZE } from 'Constants';
+import { BALLSIZE, BALL_COLOR, CARDSIZE, GAME_FINISH_TIME } from 'Constants';
 import { getRandomNumber } from 'utils/GetRandomNumber';
 import { getRandomColor } from 'utils/GetRandomColor';
 import { useEffect, useRef, useState } from 'react';
+import { Board } from 'components/board/Board';
 import { Ball } from 'components/ball/Ball';
 import './Card.css';
 
@@ -10,20 +11,34 @@ export const Card = () => {
     const cb = useRef(() => {});
 
     useEffect(() => {
-        const id = setInterval(cb.current, 1000);
-        return () => clearInterval(id);
+        const intervalId = setInterval(cb.current, 1000);
+        const timeoutId = setTimeout(
+            () => clearInterval(intervalId),
+            GAME_FINISH_TIME,
+        );
+        return () => {
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     useEffect(() => {
+        let tikTime = 1;
         cb.current = () => {
-            setBalls((prevBalls) => [
-                ...prevBalls,
-                {
-                    left: getRandomNumber(0, CARDSIZE.width - BALLSIZE.width),
-                    color: getRandomColor(BALL_COLOR),
-                    id: Math.random(),
-                },
-            ]);
+            if (tikTime % 5 === 0 || tikTime % 5 > 2) {
+                setBalls((prevBalls) => [
+                    ...prevBalls,
+                    {
+                        left: getRandomNumber(
+                            0,
+                            CARDSIZE.width - BALLSIZE.width,
+                        ),
+                        color: getRandomColor(BALL_COLOR),
+                        id: Math.random(),
+                    },
+                ]);
+            }
+            tikTime++;
         };
     });
 
@@ -35,6 +50,7 @@ export const Card = () => {
             {balls.map((ball) => (
                 <Ball left={ball.left} color={ball.color} key={ball.id}></Ball>
             ))}
+            <Board />
         </div>
     );
 };

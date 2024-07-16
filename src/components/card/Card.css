@@ -1,4 +1,5 @@
 .card {
+    display: flex;
     background-image: url('../../assets/playground.jpg');
     margin-top: 20px;
     margin-left: 20px;

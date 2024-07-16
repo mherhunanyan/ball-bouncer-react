@@ -1,3 +1,5 @@
+import './Board.css';
+
 export const Board = () => {
-    return <span></span>;
+    return <span className="board"></span>;
 };
