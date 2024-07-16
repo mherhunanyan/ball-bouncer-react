@@ -1,0 +1,6 @@
+.timer {
+    flex-direction: column;
+    margin-top: 20px;
+    color: chartreuse;
+    font-size: 40px;
+}
