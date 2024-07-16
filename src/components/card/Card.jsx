@@ -16,12 +16,15 @@ export const Card = () => {
     const [balls, setBalls] = useState([]);
     const [boardPosition, setBoardPosition] = useState(0);
     const cb = useRef(() => {});
+    const cb2 = useRef(() => {});
+    const boardPositionRef = useRef(0);
 
     const keyDownHandler = (e) => {
         if (e.code === 'ArrowLeft') {
             const minBoardPosition = 0;
             setBoardPosition((prevPosition) => {
                 if (prevPosition > minBoardPosition) {
+                    boardPositionRef.current = prevPosition - 20;
                     return (prevPosition -= 20);
                 } else {
                     return prevPosition;
@@ -31,6 +34,7 @@ export const Card = () => {
             const maxBoardPosition = CARDSIZE.width - BOARDSIZE.width;
             setBoardPosition((prevPosition) => {
                 if (prevPosition < maxBoardPosition) {
+                    boardPositionRef.current = prevPosition + 20;
                     return (prevPosition += 20);
                 } else {
                     return prevPosition;
@@ -41,6 +45,7 @@ export const Card = () => {
 
     useEffect(() => {
         const intervalId = setInterval(cb.current, 1000);
+        const intervalId2 = setInterval(cb2.current, 80);
         const timeoutId = setTimeout(() => {
             clearInterval(intervalId);
         }, GAME_FINISH_TIME);
@@ -48,6 +53,7 @@ export const Card = () => {
 
         return () => {
             clearInterval(intervalId);
+            clearInterval(intervalId2);
             clearTimeout(timeoutId);
             window.removeEventListener('keydown', keyDownHandler);
         };
@@ -66,10 +72,38 @@ export const Card = () => {
                         ),
                         color: getRandomColor(BALL_COLOR),
                         id: Math.random(),
+                        top: 0,
                     },
                 ]);
             }
             tikTime++;
+        };
+
+        cb2.current = () => {
+            setBalls((prevBalls) =>
+                prevBalls.reduce((newBalls, ball) => {
+                    const maxTop = CARDSIZE.height;
+                    const increasedTop = ball.top + 10;
+                    const currBallTop = ball.top;
+                    if (
+                        currBallTop >=
+                            maxTop -
+                                BALLSIZE.height -
+                                BOARDSIZE.height -
+                                BOARDSIZE.additionalSize &&
+                        ball.left >=
+                            boardPositionRef.current - BALLSIZE.width / 2 &&
+                        ball.left <= boardPositionRef.current + BOARDSIZE.width
+                    ) {
+                        return newBalls;
+                    }
+                    newBalls.push({
+                        ...ball,
+                        top: currBallTop >= maxTop ? currBallTop : increasedTop,
+                    });
+                    return newBalls;
+                }, []),
+            );
         };
     });
 
@@ -79,7 +113,7 @@ export const Card = () => {
             style={{ width: CARDSIZE.width, height: CARDSIZE.height }}
         >
             {balls.map((ball) => (
-                <Ball left={ball.left} color={ball.color} key={ball.id}></Ball>
+                <Ball ballStyle={ball} key={ball.id} />
             ))}
             <Board left={boardPosition} />
         </div>
