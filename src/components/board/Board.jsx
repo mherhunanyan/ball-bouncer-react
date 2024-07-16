@@ -1,5 +1,6 @@
 import './Board.css';
 
-export const Board = () => {
-    return <span className="board"></span>;
+export const Board = (props) => {
+    const { left } = props;
+    return <span className="board" style={{ left }}></span>;
 };

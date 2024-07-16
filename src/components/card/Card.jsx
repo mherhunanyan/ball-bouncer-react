@@ -1,24 +1,55 @@
-import { BALLSIZE, BALL_COLOR, CARDSIZE, GAME_FINISH_TIME } from 'Constants';
 import { getRandomNumber } from 'utils/GetRandomNumber';
 import { getRandomColor } from 'utils/GetRandomColor';
 import { useEffect, useRef, useState } from 'react';
 import { Board } from 'components/board/Board';
 import { Ball } from 'components/ball/Ball';
 import './Card.css';
+import {
+    BALLSIZE,
+    BALL_COLOR,
+    BOARDSIZE,
+    CARDSIZE,
+    GAME_FINISH_TIME,
+} from 'Constants';
 
 export const Card = () => {
     const [balls, setBalls] = useState([]);
+    const [boardPosition, setBoardPosition] = useState(0);
     const cb = useRef(() => {});
+
+    const keyDownHandler = (e) => {
+        if (e.code === 'ArrowLeft') {
+            const minBoardPosition = 0;
+            setBoardPosition((prevPosition) => {
+                if (prevPosition > minBoardPosition) {
+                    return (prevPosition -= 20);
+                } else {
+                    return prevPosition;
+                }
+            });
+        } else if (e.code === 'ArrowRight') {
+            const maxBoardPosition = CARDSIZE.width - BOARDSIZE.width;
+            setBoardPosition((prevPosition) => {
+                if (prevPosition < maxBoardPosition) {
+                    return (prevPosition += 20);
+                } else {
+                    return prevPosition;
+                }
+            });
+        }
+    };
 
     useEffect(() => {
         const intervalId = setInterval(cb.current, 1000);
-        const timeoutId = setTimeout(
-            () => clearInterval(intervalId),
-            GAME_FINISH_TIME,
-        );
+        const timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+        }, GAME_FINISH_TIME);
+        window.addEventListener('keydown', keyDownHandler);
+
         return () => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
+            window.removeEventListener('keydown', keyDownHandler);
         };
     }, []);
 
@@ -50,7 +81,7 @@ export const Card = () => {
             {balls.map((ball) => (
                 <Ball left={ball.left} color={ball.color} key={ball.id}></Ball>
             ))}
-            <Board />
+            <Board left={boardPosition} />
         </div>
     );
 };
