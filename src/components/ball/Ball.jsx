@@ -3,15 +3,15 @@ import './Ball.css';
 
 export const Ball = (props) => {
     const { ballStyle } = props;
-    const { left, color, top } = ballStyle;
+    const { ballLeft, ballColor, ballTop } = ballStyle;
 
     return (
         <span
             className="ball"
             style={{
-                left,
-                top,
-                backgroundColor: color,
+                left: ballLeft,
+                top: ballTop,
+                backgroundColor: ballColor,
                 width: BALLSIZE.width,
                 height: BALLSIZE.height,
             }}

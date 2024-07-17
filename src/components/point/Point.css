@@ -1,0 +1,6 @@
+.point {
+    display: flex;
+    font-size: 40px;
+    justify-content: center;
+    color: bisque;
+}

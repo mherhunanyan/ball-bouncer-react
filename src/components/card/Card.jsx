@@ -12,12 +12,14 @@ import {
     GAME_FINISH_TIME,
 } from 'Constants';
 
-export const Card = () => {
-    const [balls, setBalls] = useState([]);
-    const [boardPosition, setBoardPosition] = useState(0);
+export const Card = (props) => {
+    const { setPoint } = props;
     const cb = useRef(() => {});
     const cb2 = useRef(() => {});
+    // const pointRef = useRef(0); // 2 way
     const boardPositionRef = useRef(0);
+    const [balls, setBalls] = useState([]);
+    const [boardPosition, setBoardPosition] = useState(0);
 
     const keyDownHandler = (e) => {
         if (e.code === 'ArrowLeft') {
@@ -66,13 +68,13 @@ export const Card = () => {
                 setBalls((prevBalls) => [
                     ...prevBalls,
                     {
-                        left: getRandomNumber(
+                        ballLeft: getRandomNumber(
                             0,
                             CARDSIZE.width - BALLSIZE.width,
                         ),
-                        color: getRandomColor(BALL_COLOR),
+                        ballColor: getRandomColor(BALL_COLOR),
                         id: Math.random(),
-                        top: 0,
+                        ballTop: 0,
                     },
                 ]);
             }
@@ -83,29 +85,41 @@ export const Card = () => {
             setBalls((prevBalls) =>
                 prevBalls.reduce((newBalls, ball) => {
                     const maxTop = CARDSIZE.height;
-                    const increasedTop = ball.top + 10;
-                    const currBallTop = ball.top;
+                    const { ballTop, ballLeft, ballColor } = ball;
+                    const increasedTop = ballTop + 10;
                     if (
-                        currBallTop >=
+                        ballTop >=
                             maxTop -
                                 BALLSIZE.height -
                                 BOARDSIZE.height -
                                 BOARDSIZE.additionalSize &&
-                        ball.left >=
+                        ballTop < maxTop &&
+                        ballLeft >=
                             boardPositionRef.current - BALLSIZE.width / 2 &&
-                        ball.left <= boardPositionRef.current + BOARDSIZE.width
+                        ballLeft <= boardPositionRef.current + BOARDSIZE.width
                     ) {
+                        // this point i want to increase user points
+                        // setPoint((prevPoint) => prevPoint + 10); // 1 way
+                        // pointRef.current += 10; // 2 way
+                        return newBalls;
+                    } else if (ballTop === maxTop) {
+                        return newBalls;
+                    } else {
+                        newBalls.push({
+                            ...ball,
+                            ballTop: ballTop >= maxTop ? ballTop : increasedTop,
+                        });
                         return newBalls;
                     }
-                    newBalls.push({
-                        ...ball,
-                        top: currBallTop >= maxTop ? currBallTop : increasedTop,
-                    });
-                    return newBalls;
                 }, []),
             );
         };
     });
+
+    // 2 way
+    // useEffect(() => {
+    //     setPoint(pointRef.current);
+    // }, [pointRef.current, setPoint]);
 
     return (
         <div

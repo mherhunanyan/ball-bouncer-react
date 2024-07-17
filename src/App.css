@@ -2,3 +2,9 @@
     display: flex;
     gap: 150px;
 }
+
+.timer-point-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
