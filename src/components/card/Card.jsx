@@ -16,7 +16,6 @@ export const Card = (props) => {
     const { setPoint } = props;
     const cb = useRef(() => {});
     const cb2 = useRef(() => {});
-    // const pointRef = useRef(0); // 2 way
     const boardPositionRef = useRef(0);
     const [balls, setBalls] = useState([]);
     const [boardPosition, setBoardPosition] = useState(0);
@@ -46,8 +45,13 @@ export const Card = (props) => {
     };
 
     useEffect(() => {
-        const intervalId = setInterval(cb.current, 1000);
-        const intervalId2 = setInterval(cb2.current, 80);
+        let time1 = 0;
+        const intervalId = setInterval(() => {
+            time1++;
+            
+            cb.current(time1)
+        }, 1000);
+        const intervalId2 = setInterval(() => cb2.current(), 80);
         const timeoutId = setTimeout(() => {
             clearInterval(intervalId);
         }, GAME_FINISH_TIME);
@@ -62,9 +66,8 @@ export const Card = (props) => {
     }, []);
 
     useEffect(() => {
-        let tikTime = 1;
-        cb.current = () => {
-            if (tikTime % 5 === 0 || tikTime % 5 > 2) {
+        cb.current = (time) => {
+            if (time % 5 === 0 || time % 5 > 2) {
                 setBalls((prevBalls) => [
                     ...prevBalls,
                     {
@@ -78,41 +81,40 @@ export const Card = (props) => {
                     },
                 ]);
             }
-            tikTime++;
         };
 
         cb2.current = () => {
-            setBalls((prevBalls) =>
-                prevBalls.reduce((newBalls, ball) => {
-                    const maxTop = CARDSIZE.height;
-                    const { ballTop, ballLeft, ballColor } = ball;
-                    const increasedTop = ballTop + 10;
-                    if (
-                        ballTop >=
-                            maxTop -
-                                BALLSIZE.height -
-                                BOARDSIZE.height -
-                                BOARDSIZE.additionalSize &&
-                        ballTop < maxTop &&
-                        ballLeft >=
-                            boardPositionRef.current - BALLSIZE.width / 2 &&
-                        ballLeft <= boardPositionRef.current + BOARDSIZE.width
-                    ) {
-                        // this point i want to increase user points
-                        // setPoint((prevPoint) => prevPoint + 10); // 1 way
-                        // pointRef.current += 10; // 2 way
-                        return newBalls;
-                    } else if (ballTop === maxTop) {
-                        return newBalls;
-                    } else {
-                        newBalls.push({
-                            ...ball,
-                            ballTop: ballTop >= maxTop ? ballTop : increasedTop,
-                        });
-                        return newBalls;
-                    }
-                }, []),
-            );
+            const tazaSharik = balls.reduce((newBalls, ball) => {
+                const maxTop = CARDSIZE.height;
+                const { ballTop, ballLeft, ballColor } = ball;
+                const increasedTop = ballTop + 10;
+                if (
+                    ballTop >=
+                        maxTop -
+                            BALLSIZE.height -
+                            BOARDSIZE.height -
+                            BOARDSIZE.additionalSize &&
+                    ballTop < maxTop &&
+                    ballLeft >= boardPositionRef.current - BALLSIZE.width / 2 &&
+                    ballLeft <= boardPositionRef.current + BOARDSIZE.width
+                ) {
+                    // this point i want to increase user points
+                    setPoint((prevPoint) => prevPoint + 10); // 1 way
+                    return newBalls;
+                } else if (ballTop === maxTop) {
+                    return newBalls;
+                } else {
+                    console.log(ballTop);
+                    newBalls.push({
+                        ...ball,
+                        ballTop: ballTop >= maxTop ? ballTop : increasedTop,
+                    });
+                    return newBalls;
+                }
+            }, []);
+
+            setBalls(tazaSharik)
+            // setPoint()
         };
     });
 

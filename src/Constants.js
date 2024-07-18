@@ -10,6 +10,6 @@ export const {
     BOARDSIZE: { width: 80, height: 15, additionalSize: 8 },
     BALLSIZE: { width: 25, height: 25 },
     BALL_COLOR: ['red', 'blue', 'black'],
-    GAME_FINISH_TIME: 5000,
+    GAME_FINISH_TIME: 120000,
     FORMATTEDTIME: '02:00',
 };
